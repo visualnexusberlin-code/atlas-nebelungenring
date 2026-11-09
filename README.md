@@ -28,7 +28,7 @@ Construir: `python3 src/anillo/build.py`
 Configuración, una sola vez:
 
 1. Abre https://console.cloud.google.com/iam-admin/serviceaccounts?project=opera-magna (con mirrorshades.noe@gmail.com).
-2. **Crear cuenta de servicio** → nombre `github-deploy` → función **Firebase Hosting Admin** (y **API Keys Viewer**) → Listo.
+2. **Crear cuenta de servicio** → nombre `github-deploy` → en «Otorgar acceso», añade tres funciones: **Administrador de Firebase Hosting**, **Visualizador de claves de API** y **Administrador de Firebase Authentication** (necesario para las vistas previas) → Listo.
 3. En la cuenta creada: **Claves → Agregar clave → Crear clave nueva → JSON**. Se descarga un archivo.
 4. En GitHub: este repositorio → **Settings → Secrets and variables → Actions → New repository secret**.
    - Nombre: `FIREBASE_SERVICE_ACCOUNT_OPERA_MAGNA`
