@@ -1,0 +1,45 @@
+# Publica Opera Magna en Firebase Hosting (proyecto opera-magna).
+# Solo se ejecuta a mano: GitHub → Actions → "Publicar en Firebase" → Run workflow.
+# Requiere el secreto FIREBASE_SERVICE_ACCOUNT_OPERA_MAGNA (ver README).
+name: Publicar en Firebase
+
+on:
+  workflow_dispatch:
+    inputs:
+      destino:
+        description: "live = web pública · preview = canal de prueba (7 días)"
+        required: true
+        default: preview
+        type: choice
+        options: [preview, live]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruir El Anillo desde las fuentes
+        run: python3 src/anillo/build.py
+
+      - name: Publicar en vista previa
+        if: inputs.destino == 'preview'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OPERA_MAGNA }}
+          projectId: opera-magna
+          channelId: preview
+          expires: 7d
+
+      - name: Publicar en la web
+        if: inputs.destino == 'live'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OPERA_MAGNA }}
+          projectId: opera-magna
+          channelId: live
